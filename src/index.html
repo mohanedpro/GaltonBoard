@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bean Machine</title>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
+    <!-- <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+      crossorigin="anonymous"
+    /> -->
+    <!-- <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+      crossorigin="anonymous"
+    ></script> -->
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script> -->
+    <!-- <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"
+      integrity="sha512-0z8URjGET6GWnS1xcgiLBZBzoaS8BNlKayfZyQNKz4IRp+s7CKXx0yz7Eco2+TcwoeMBa5KMwmTX7Kus7Fa5Uw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script> -->
+    
+
+    <script src="../p5.min.js"></script>
+    <script src="../node_modules/matter-js/build/matter.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <link href="./output.css" rel="stylesheet" />
+  </head>
+
+  <body class="h-screen bg-[#101b24] text-white lg:w-3/4 lg:mx-auto">
+    <style>
+      .no-spinner::-webkit-outer-spin-button,
+      .no-spinner::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    
+      .no-spinner {
+        -moz-appearance: textfield; /* Firefox */
+      }
+    </style>
+    <div class="h-full flex flex-col">
+      <div
+        class="text-3xl font-semibold rounded-md my-2 bg-[#1b2f40] text-[#fcad03] p-2 pl-10"
+      >
+        Galton Board Simulation
+      </div>
+
+      <div class="flex flex-wrap gap-[20px] h-full flex-grow lg:flex-nowrap">
+        <div class="grow flex flex-col text-xl my-2">
+          <div class="w-full p-4 rounded-md grow bg-[#1b2f40]">
+            <p
+              class="w-full text-[#fcad03] p-2 text-2xl font-semibold text-center border-b-2"
+            >
+              Parameters
+            </p>
+
+            <form action="#" class="w-full mt-4">
+              <div class="mb-2 w-3/4 mx-auto">
+                <label for="marblesizeinput">Marble size</label>
+                <div class="flex gap-4 pl-6">
+                  <div
+                    class="h-5 w-5 bg-[#fcad03] rounded-full self-center justify-center shadow-[0_0_10px_1px_rgba(253,224,71,0.6)]"
+                  ></div>
+                  <input
+                    type="number"
+                    id="marblesizeinput"
+                    aria-describedby="emailHelp"
+                    class="no-spinner w-full p-2 rounded-md focus:outline-none"
+                  />
+                </div>
+              </div>
+              <div class="mb-2 w-3/4 mx-auto">
+                <label for="marblefrictioninput">Marble friction</label>
+                <input
+                  type="number"
+                  id="marblefrictioninput"
+                  aria-describedby="emailHelp"
+                  step="0.1"
+                  class="no-spinner w-full pl-6 p-2 rounded-md bg-[#101b24] focus:outline-none"
+                />
+              </div>
+              <div class="mb-2 w-3/4 mx-auto">
+                <label for="gravityinput">Gravity</label>
+                <input
+                  type="number"
+                  id="gravityinput"
+                  aria-describedby="emailHelp"
+                  step="0.1"
+                  class="no-spinner w-full pl-8 p-2 rounded-md bg-[#101b24] focus:outline-none"
+                />
+              </div>
+              <div class="mb-2 w-3/4 mx-auto">
+                <label for="pegs">Pegs</label>
+                <input
+                  type="number"
+                  id="pegrows"
+                  value="6"
+                  min="1"
+                  placeholder="rows"
+                  class="no-spinner w-full pl-8 mb-2 p-2 rounded-md bg-[#101b24] focus:outline-none"
+                />
+                <input
+                  type="number"
+                  id="pegdivs"
+                  value="11"
+                  min="2"
+                  placeholder="div"
+                  class="no-spinner w-full pl-8 mb-2 p-2 rounded-md bg-[#101b24] focus:outline-none"
+                />
+                <input
+                  type="number"
+                  id="pegsizeinput"
+                  value="30"
+                  min="5"
+                  placeholder="size"
+                  class="no-spinner w-full pl-8 p-2 rounded-md bg-[#101b24] focus:outline-none"
+                />
+              </div>
+            </form>
+
+            <ul class="text-center border-2 rounded-md mt-6 w-3/4 mx-auto">
+              <li class="border-b-2 p-2">
+                Marble count: <span id="marblecount">0</span>
+              </li>
+              <li class="p-2">Peg count: <span id="pegcount">0</span></li>
+            </ul>
+
+            <div class="w-3/4 mx-auto pt-10">
+              <button
+                id="resetbutton"
+                class="w-full p-2 font-semibold text-[#1b2f40] bg-[#fcad03] mb-4 rounded-md hover:text-[#fcad03] hover:shadow-[0_0_12px_2px_rgba(253,224,71,0.6)] border-3 border-transparent hover:bg-[#fcad034f] hover:border-3 hover:border-[#fcad03] transition-all duration-200 cursor-pointer"
+              >
+                Reset
+              </button>
+              <button
+                id="pausebutton"
+                class="w-full p-2 font-semibold text-[#1b2f40] bg-[#fcad03] mb-4 rounded-md hover:text-[#fcad03] hover:shadow-[0_0_12px_2px_rgba(253,224,71,0.6)] border-3 border-transparent hover:bg-[#fcad034f] hover:border-3 hover:border-[#fcad03] transition-all duration-200 cursor-pointer"
+              >
+                Pause
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="canvas1"
+          class="grow max-w-[966px] m-2 flex flex-row justify-center"
+        >
+          <div id="canvasbox" class=""></div>
+        </div>
+      </div>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>
